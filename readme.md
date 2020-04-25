@@ -44,11 +44,11 @@ JPD does all secretly, it is like "Mafia".
 ## Greed, foolness and no common sense
 
 Maybe you doubt JPD is so dirty.
-JPD is the son of Japanese ARMY/NAVY at WW2, the dirty kamikaze one.
-JPD is a bunch of greedy bureaucrats and their puppets.
+JPD is the son of Japanese ARMY/NAVY at WW2, 
+the bunch of greedy bureaucrats and their kamikaze puppets.
 
 Maybe you feel suspecious Japanese allows JPD to make dirty cheat.
-It is the time to tell some truth of Japanese.
+But this is some truth of Japanese.
 
 - No own justice, authorities give standards to Japanese.
 - No common sense, Japanese doesn't respect the history.
