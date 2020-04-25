@@ -34,25 +34,25 @@ JPD makes no-dangerous but difficult person as targets.
 If they have some criminal records or phycological histories,
 that is good for JPD because of ease to justify.
 
-JPD requests citizen for cooperation and pays rewards for them.
+JPD requests neighbors for cooperation and pays rewards for them.
 AND!! JPD request rebate. 
 Instead of that, JPD helps cooperater if they get into trouble.
 And cooperaters help JPD when JPD in trouble.
 
 JPD does all secretly, it is like "Mafia".
 
-## Greed, foolness and no-common sense
+## Greed, foolness and no common sense
 
 Maybe you doubt JPD is so dirty.
-JPD the son of Japanese ARMY/NAVY at WW2.
-JPD is simply greedy.
+JPD is the son of Japanese ARMY/NAVY at WW2.
+JPD is simply greedy and idiot.
 
 Maybe you feel suspecious Japanese allows JPD to make dirty cheat.
 It is the time to tell some truth of Japanese.
 
-- No own justice, authorities give it Japanese.
+- No own justice, authorities give standards to Japanese.
 - No common sense, Japanese doesn't respect the history.
-- No growing up, Japanese is always in childhood.
+- No growing up, Japanese mind is like a child.
 
 Only little bit of Japanese becomes an adult.
 So that the authority like JPD is an absolute one for typical Japanese.
