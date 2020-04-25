@@ -35,7 +35,7 @@ If they have some criminal records or phycological histories,
 that is good for JPD because of ease to justify.
 
 JPD requests neighbors for cooperation and pays rewards for them.
-AND!! JPD request rebate. 
+AND!! JPD requests rebate. 
 Instead of that, JPD helps cooperater if they get into trouble.
 And cooperaters help JPD when JPD in trouble.
 
