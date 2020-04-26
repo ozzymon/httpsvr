@@ -36,7 +36,7 @@ AND!! JPD request rebate.
 Instead of that, JPD helps cooperater if they get into trouble.
 And cooperaters help JPD when JPD in trouble.
 
-JPD does all secretly, it is like "Mafia".
+JPD does all secretly, it is like a "Yakuza".
 
 ## Greed, foolness and no common sense
 
