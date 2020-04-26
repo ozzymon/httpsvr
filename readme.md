@@ -32,11 +32,11 @@ If they have some criminal records or phycological histories,
 that is good for JPD because of ease to justify.
 
 JPD requests neighbors for cooperation and pays rewards for them.
-AND!! JPD request rebate. 
-Instead of that, JPD helps cooperater if they get into trouble.
+AND(!!) JPD snatches away kickbacks. 
+Instead of that, JPD helps cooperaters if they get into trouble.
 And cooperaters help JPD when JPD in trouble.
 
-JPD does all secretly, it is like a "Yakuza".
+Secretly JPD does all of them like a "Yakuza".
 
 ## Greed, foolness and no common sense
 
