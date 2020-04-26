@@ -27,18 +27,18 @@ But Japanese police overuses this method for their own gain.
 JPD abuse the gangstalking method for their gain.
 The gain is making hidden money and  reinforcement their authority.
 
-JPD makes no-dangerous but difficult person as targets.
+JPD makes targets, not dangerous but difficult person.
 If they have some criminal records or phycological histories,
-that is good for JPD because of ease to justify.
+good for JPD because of ease to justify.
 
 JPD requests neighbors for cooperation and pays rewards for them.
-AND(!!) JPD snatches away kickbacks. 
+AND(!!) JPD snatches kickbacks. 
 Instead of that, JPD helps cooperaters if they get into trouble.
-And cooperaters help JPD when JPD in trouble.
+And cooperaters help JPD in trouble.
 
 Secretly JPD does all of them like a "Yakuza".
 
-## Greed, foolness and no common sense
+## Greed and no common sense
 
 Maybe you doubt JPD is so dirty.
 JPD is the cult of greedy bureaucrats and their kamikaze puppets, 
@@ -47,7 +47,7 @@ that has the mind of Japanese ARMY/NAVY at WW2.
 Maybe you feel suspecious Japanese allows JPD to make dirty cheat.
 But this is some truth of Japanese.
 
-- No own justice, authorities give standards to Japanese.
+- No own justice, Japanese wants authorities give standards. 
 - No common sense, Japanese doesn't respect the history.
 - No growing up, Japanese is just a empty puppet.
 
