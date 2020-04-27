@@ -33,5 +33,7 @@ Japanese don't treat a psychiatrist as a doctor.
 Because psychiatrists are bastards who torture socially vulnerables.
 Not everyone but a lot of Japanese knows about this.
 
+The psychiatrist change the targets' inter-personal problems 
+to their gain.
 They are the member of the gangstalking cult as same as JP.
 So that it's no use if someone makes them bastards terrible.
