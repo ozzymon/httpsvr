@@ -10,7 +10,7 @@ In Japan, mental health means two means.
 Mental health is not at all healthy in Japan.
 
 The difficult person means who is difficult, makes many enemies 
-and easy to be sacrificed in some groups.
+and easy to be sacrificed in his group.
 
 I mentioned gangstalking by Japan Police at JP.md.
 JP co-works psychiatrists, and the targets finally get into the mental hospital.
