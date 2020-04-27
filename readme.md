@@ -28,7 +28,7 @@ JP abuse the gangstalking method for their gain.
 The gain is making hidden money and  reinforcement their authority.
 
 JP makes targets, not dangerous but difficult person.
-If they have some criminal records or phycological histories,
+If they have some criminal records or psychological histories,
 good for JP because of ease to justify.
 
 JP requests neighbors for cooperation and pays rewards for them.
