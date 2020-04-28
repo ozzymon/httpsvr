@@ -32,3 +32,4 @@ They are criminals and if there is some document about the crime,
 like PANAMA DOCS, they make a part of them foots the bill.
 By repeating those, finally becomes fatal for them.
 Drive them full of pains until they understand the common sense.
+Not the justice, not even the common sense, they don't have.
