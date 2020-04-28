@@ -20,7 +20,7 @@ And this is a typical Japanese policeman.
 
 As a matter of course, they often use cheap tricks.
 Cheap tricks inherited from generation to generation, 
-because they are idiot and can't make new ones.
+because they are idiotic and can't make new ones.
 Their questions and answers are same at all and adding tones, too.
 They are puppets of dogmatism, copy-and-paste machines.
 
