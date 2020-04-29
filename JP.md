@@ -1,6 +1,5 @@
 # Japan Police and Japanese people
 
-
 ## JP
 
 Japan police has no dignity individually,
@@ -41,4 +40,5 @@ Not the justice, not even the common sense, they have nothing.
 
 They have no constructive opinions but too much complaints
 enough to drive JP go evil.
+They make JP solve their personal problems that have to be solved by themselves.
 I think, it's no use that JP is so evil because of Japanese people.
