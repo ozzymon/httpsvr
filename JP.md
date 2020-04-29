@@ -1,4 +1,7 @@
-# Japan Police and Japanese policemen
+# Japan Police and Japanese people
+
+
+## JP
 
 Japan police has no dignity individually,
 but too much arrogance due to their organizational strength.
@@ -32,4 +35,10 @@ They are criminals and if there is some document about the crime,
 like PANAMA DOCS, they make a part of them foots the bill.
 By repeating those, finally becomes fatal for them.
 Drive them full of pains until they understand the common sense.
-Not the justice, not even the common sense, they don't have.
+Not the justice, not even the common sense, they have nothing.
+
+##Japanese people
+
+They have no constructive opinions but too much complaints
+enough to drive JP go evil.
+I think, it's no use that JP is so evil because of Japanese people.
