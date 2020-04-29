@@ -17,14 +17,21 @@ You know, the raped journalist and JP's cheap trick.
 And this is a typical Japanese policeman.
 
 - They are extremely stereotyped like an idoit.
-- They obey the command, not the law.
+- They obey their gang and the command, not the law.
 - They always use lies, fabrications, falsifications.
 
 As a matter of course, they often use cheap tricks.
 Cheap tricks inherited from generation to generation, 
 because they are idiotic and can't make new ones.
-Their questions and answers are same at all and adding tones, too.
-They are puppets of dogmatism, copy-and-paste machines.
+
+Though tricks became old and useless, they would be attached to them.
+If they made new tricks, the responsibility of the effectiveness
+would belong to them, or if not, it should belong to the others.
+They are impotent and hate taking responsible, 
+they love the gain and the promotion without their responsibility.
+
+So they become copy-and-paste machines, 
+their questions and answers are same at all and adding tones, too.
 
 They are so huge that it's difficult to make them pay the price.
 I think, it's good to make them break themselves by internal stress 
@@ -42,3 +49,6 @@ They have no constructive opinions but too much complaints
 enough to drive JP go evil.
 They make JP solve their personal problems that have to be solved by themselves.
 I think, it's no use that JP is so evil because of Japanese people.
+
+Japanese people tend to love the gain without their responsibility, 
+I think, impotent people makes their police impotent, too.
