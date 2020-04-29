@@ -37,7 +37,7 @@ By repeating those, finally becomes fatal for them.
 Drive them full of pains until they understand the common sense.
 Not the justice, not even the common sense, they have nothing.
 
-##Japanese people
+## Japanese people
 
 They have no constructive opinions but too much complaints
 enough to drive JP go evil.
