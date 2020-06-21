@@ -167,7 +167,7 @@ End Type
 Private Q As Boolean
 
 Private Const TOUT = 1
-Private Const PORT = 8080
+Private Const Port = 8080
 Private Const BACKLOG = 20
 
 Private Const RecvSize = 1024
@@ -187,7 +187,7 @@ Private Type RingBuf
 End Type
 
 '--------------------------------------------------------------------
-'- 関数宣言
+'- Windows API
 '- char     :Byte
 '- Int      :Long
 '- short    :Integer
@@ -195,13 +195,13 @@ End Type
 '- pointer  :LongPtr
 '- WORD     :Integer
 '- DWORD    :Long
-'WSA関連
+'WSA
 Private Declare PtrSafe Function WSAStartup Lib "ws2_32.dll" (ByVal wVersionRequested As Integer, ByRef lpWSAData As WSAData) As Long
 Private Declare PtrSafe Function WSACleanup Lib "ws2_32.dll" () As Long
 Private Declare PtrSafe Function WSAGetLastError Lib "ws2_32.dll" () As Long
 Private Declare PtrSafe Function WSAFDIsSet Lib "ws2_32.dll" Alias "__WSAFDIsSet" (ByVal SOCKET As LongPtr, ByRef Fds As FD_SET) As Long
 
-'接続
+'Connection
 Private Declare PtrSafe Function w_socket Lib "ws2_32.dll" Alias "socket" (ByVal lngAf As Long, ByVal lngType As Long, ByVal lngProtocol As Long) As LongPtr
 Private Declare PtrSafe Function w_connect Lib "ws2_32.dll" Alias "connect" (ByVal SOCKET As LongPtr, Name As sockaddr_in, ByVal namelen As Long) As Long
 Private Declare PtrSafe Function w_shutdown Lib "ws2_32.dll" Alias "shutdown" (ByVal SOCKET As LongPtr, ByVal how As Long) As Long
@@ -212,46 +212,46 @@ Private Declare PtrSafe Function w_ioctlsocket Lib "ws2_32.dll" Alias "ioctlsock
 
 Private Declare PtrSafe Function w_getsockopt Lib "ws2_32.dll" Alias "getsockopt" (ByVal SOCKET As LongPtr, ByVal level As Long, ByVal optname As Long, optval As Any, optlen As Long) As Long
 
-'送受信
-Private Declare PtrSafe Function w_send Lib "ws2_32.dll" Alias "send" (ByVal SOCKET As LongPtr, Buf As Any, ByVal Length As Long, ByVal Flags As Long) As Long
-Private Declare PtrSafe Function w_sendTo Lib "ws2_32.dll" Alias "sendto" (ByVal SOCKET As LongPtr, Buf As Any, ByVal Length As Long, ByVal Flags As Long, remoteAddr As sockaddr_in, ByVal remoteAddrSize As Long) As Long
-Private Declare PtrSafe Function w_recv Lib "ws2_32.dll" Alias "recv" (ByVal SOCKET As LongPtr, Buf As Any, ByVal Length As Long, ByVal Flags As Long) As Long
-Private Declare PtrSafe Function w_recvFrom Lib "ws2_32.dll" Alias "recvfrom" (ByVal SOCKET As LongPtr, Buf As Any, ByVal Length As Long, ByVal Flags As Long, fromAddr As sockaddr_in, fromAddrSize As Long) As Long
+'Transmission
+Private Declare PtrSafe Function w_send Lib "ws2_32.dll" Alias "send" (ByVal SOCKET As LongPtr, buf As Any, ByVal Length As Long, ByVal Flags As Long) As Long
+Private Declare PtrSafe Function w_sendTo Lib "ws2_32.dll" Alias "sendto" (ByVal SOCKET As LongPtr, buf As Any, ByVal Length As Long, ByVal Flags As Long, remoteAddr As sockaddr_in, ByVal remoteAddrSize As Long) As Long
+Private Declare PtrSafe Function w_recv Lib "ws2_32.dll" Alias "recv" (ByVal SOCKET As LongPtr, buf As Any, ByVal Length As Long, ByVal Flags As Long) As Long
+Private Declare PtrSafe Function w_recvFrom Lib "ws2_32.dll" Alias "recvfrom" (ByVal SOCKET As LongPtr, buf As Any, ByVal Length As Long, ByVal Flags As Long, fromAddr As sockaddr_in, fromAddrSize As Long) As Long
 
-'サーバー
+'svr func
 Private Declare PtrSafe Function w_bind Lib "ws2_32.dll" Alias "bind" (ByVal SOCKET As LongPtr, Name As sockaddr, ByVal namelen As Long) As Long
 Private Declare PtrSafe Function w_listen Lib "ws2_32.dll" Alias "listen" (ByVal SOCKET As LongPtr, ByVal BACKLOG As Long) As Long
 Private Declare PtrSafe Function w_accept Lib "ws2_32.dll" Alias "accept" (ByVal SOCKET As LongPtr, ByRef Addr As sockaddr, ByRef addrlen As Long) As LongPtr
 
 'Utility
 Private Declare PtrSafe Function getsockname Lib "ws2_32.dll" (ByVal SOCKET As LongPtr, ByRef Name As sockaddr, ByRef namelen As Long) As Long
-'ローカルホスト名取得
+'hostnm local
 Private Declare PtrSafe Function gethostname Lib "ws2_32.dll" (ByVal host_name As String, ByVal namelen As Integer) As Integer
-'アドレスからホスト名を取得
+'addr 2 hostnm
 Private Declare PtrSafe Function gethostbyaddr Lib "ws2_32.dll" (ByRef Addr As Long, ByVal Length As Long, ByVal af As Long) As LongPtr
-'ホスト名からIPアドレスを取得
+'hostnm 2 addr
 Private Declare PtrSafe Function gethostbyname Lib "ws2_32.dll" (ByVal host_name As String) As LongPtr
-'IPをドット形式(x.x.x.x)から内部形式に変更 ※8進と16進に注意
+'addr string to byte
 Private Declare PtrSafe Function inet_addr Lib "ws2_32.dll" (ByVal cp As String) As Long
-'ホストバイトオーダからネットワークバイトオーダに変更
+'byte order host 2 nw
 Private Declare PtrSafe Function htons Lib "ws2_32.dll" (ByVal hostshort As Integer) As Integer
 Private Declare PtrSafe Function htonl Lib "ws2_32.dll" (ByVal hostlong As Long) As Long
-'ネットワークバイトオーダからホストバイトオーダに変更
+'byte order nw 2 host
 Private Declare PtrSafe Function ntohl Lib "ws2_32.dll" (ByVal netlong As Long) As Long
 Private Declare PtrSafe Function ntohs Lib "ws2_32.dll" (ByVal netshort As Integer) As Integer
 
 Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (ByVal hpvDest As LongPtr, ByVal hpvSource As LongPtr, ByVal cbCopy As Long)
-Private Declare PtrSafe Function GetComputerName Lib "kernel32" Alias "GetComputerNameA" (ByVal Buffer As String, ByRef Size As Long) As Long
+Private Declare PtrSafe Function GetComputerName Lib "kernel32" Alias "GetComputerNameA" (ByVal Buffer As String, ByRef size As Long) As Long
 Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 Private Declare PtrSafe Sub ZeroMemory Lib "kernel32" Alias "RtlZeroMemory" (Destination As Any, ByVal Length As Long)
 
 'error code
 Private Const WSABASEERR             As Long = 10000 'No Error
 Private Const WSAEINTR               As Long = 10004 'Interrupted by system call
-Private Const WSAEBADF               As Long = 10009 '無効なファイルハンドルがソケット関数に渡された
+Private Const WSAEBADF               As Long = 10009 'Invalid file handle
 Private Const WSAEACCES              As Long = 10013 'access denied
-Private Const WSAEFAULT              As Long = 10014 '無効なバッファアドレス
-Private Const WSAEINVAL              As Long = 10022 '無効な引数
+Private Const WSAEFAULT              As Long = 10014 'Invalid buff ptr
+Private Const WSAEINVAL              As Long = 10022 'Invalid param
 Private Const WSAEMFILE              As Long = 10024 'Too many open files
 Private Const WSAEWOULDBLOCK         As Long = 10035 'Operation would block
 Private Const WSAEINPROGRESS         As Long = 10036 'Operation now in progress
@@ -346,64 +346,64 @@ Private Function IPToText(ByVal IPAddress As Long) As String
         CStr(bytes(3))
 End Function
 
-'エラーメッセージを返します。
+'errmsg
 Private Function ErrorMsg(ByVal ErrorCode) As String
     ErrorMsg = ""
     Select Case ErrorCode
-        Case WSAEINTR:           ErrorMsg = "関数呼び出しに割り込みがありました。"
-        Case WSAEACCES:          ErrorMsg = "アクセスは拒否されました。"
-        Case WSAEFAULT:          ErrorMsg = "アドレスが正しくありません。"
-        Case WSAEINVAL:          ErrorMsg = "無効な引数です。"
-        Case WSAEMFILE:          ErrorMsg = "開いているファイルが多すぎます。"
-        Case WSAEWOULDBLOCK:     ErrorMsg = "ノンブロッキング状態であり、処理が直ちに完了しませんでした。。"
-        Case WSAEINPROGRESS:     ErrorMsg = "ブロック操作を実行中です。"
-        Case WSAEALREADY:        ErrorMsg = "操作はすでに実行中です。"
-        Case WSAENOTSOCK:        ErrorMsg = "記述子がソケットではありません。"
-        Case WSAEDESTADDRREQ:    ErrorMsg = "送信先のアドレスが必要です。"
-        Case WSAEMSGSIZE:        ErrorMsg = "メッセージが長すぎます。"
-        Case WSAEPROTOTYPE:      ErrorMsg = "プロトコルの種類がソケットに対して正しくありません。"
-        Case WSAENOPROTOOPT:     ErrorMsg = "プロトコルのオプションが正しくありません。"
-        Case WSAEPROTONOSUPPORT: ErrorMsg = "指定したプロトコルがサポートされていません。"
-        Case WSAESOCKTNOSUPPORT: ErrorMsg = "サポートされていないプロトコルの種類です。"
-        Case WSAEOPNOTSUPP:      ErrorMsg = "要求された操作がソケット上でサポートされていません。"
-        Case WSAEPFNOSUPPORT:    ErrorMsg = "プロトコルファミリがサポートされていません。"
-        Case WSAEAFNOSUPPORT:    ErrorMsg = "指定されたプロトコルファミリは指定されたアドレスファミリをサポートしていません。"
-        Case WSAEADDRINUSE:      ErrorMsg = "アドレスが使用中です。"
-        Case WSAEADDRNOTAVAIL:   ErrorMsg = "アドレスをローカルマシンから取得できません。"
-        Case WSAENETDOWN:        ErrorMsg = "ネットワークがダウンしています。"
-        Case WSAENETUNREACH:     ErrorMsg = "現時点ではこのホストからネットワークにアクセスできません。"
-        Case WSAENETRESET:       ErrorMsg = "ネットワークがリセットされたため切断されました。"
-        Case WSAECONNABORTED:    ErrorMsg = "タイムアウトその他の不具合で接続処理が中止されました。"
-        Case WSAECONNRESET:      ErrorMsg = "ピアによって接続がリセットされました。"
-        Case WSAENOBUFS:         ErrorMsg = "使用できるバッファ領域がありません。"
-        Case WSAEISCONN:         ErrorMsg = "ソケットは既に接続されています。"
-        Case WSAENOTCONN:        ErrorMsg = "ソケットは接続されていません。"
-        Case WSAESHUTDOWN:       ErrorMsg = "ソケットは終了しています。"
-        Case WSAETIMEDOUT:       ErrorMsg = "接続がタイムアウトになりました。"
-        Case WSAECONNREFUSED:    ErrorMsg = "接続が強制的に拒絶されました。"
-        Case WSAEHOSTDOWN:       ErrorMsg = "ホストがダウンしています。"
-        Case WSAEHOSTUNREACH:    ErrorMsg = "ホストに到達するためのルートがありません。"
-        Case WSAEPROCLIM:        ErrorMsg = "プロセスが多すぎます。"
-        Case WSASYSNOTREADY:     ErrorMsg = "ネットワークサブシステムが利用できません。"
-        Case WSAVERNOTSUPPORTED: ErrorMsg = "要求された Winsock のバージョンはサポートされていません。"
-        Case WSANOTINITIALISED:  ErrorMsg = "まず WSAStartup を呼び出す必要があります。"
-        Case WSAEDISCON:         ErrorMsg = "正常なシャットダウン処理が進行中です。"
-        Case WSATYPE_NOT_FOUND:  ErrorMsg = "この種類のクラスが見つかりません。"
-        Case WSAHOST_NOT_FOUND:  ErrorMsg = "ホストが見つかりません。そのようなホストはありません。"
-        Case WSATRY_AGAIN:       ErrorMsg = "ホストが見つかりません。DNSサーバーからの応答がありません。"
-        Case WSANO_RECOVERY:     ErrorMsg = "回復不能なエラーです。"
-        Case WSANO_DATA:         ErrorMsg = "名前は有効ですが、要求された型のデータレコードがありません。"
-        Case sckInvalidOp:       ErrorMsg = "現在の状態では不正な操作です。"
-        Case Else:               ErrorMsg = "不明なエラー"
+        Case WSAEINTR:           ErrorMsg = "WSAEINTR"
+        Case WSAEACCES:          ErrorMsg = "WSAEACCES"
+        Case WSAEFAULT:          ErrorMsg = "WSAEFAULT"
+        Case WSAEINVAL:          ErrorMsg = "WSAEINVAL"
+        Case WSAEMFILE:          ErrorMsg = "WSAEMFILE"
+        Case WSAEWOULDBLOCK:     ErrorMsg = "WSAEWOULDBLOCK"
+        Case WSAEINPROGRESS:     ErrorMsg = "WSAEINPROGRESS"
+        Case WSAEALREADY:        ErrorMsg = "WSAEALREADY"
+        Case WSAENOTSOCK:        ErrorMsg = "WSAENOTSOCK"
+        Case WSAEDESTADDRREQ:    ErrorMsg = "WSAEDESTADDRREQ"
+        Case WSAEMSGSIZE:        ErrorMsg = "WSAEMSGSIZE"
+        Case WSAEPROTOTYPE:      ErrorMsg = "WSAEPROTOTYPE"
+        Case WSAENOPROTOOPT:     ErrorMsg = "WSAENOPROTOOPT"
+        Case WSAEPROTONOSUPPORT: ErrorMsg = "WSAEPROTONOSUPPORT"
+        Case WSAESOCKTNOSUPPORT: ErrorMsg = "WSAESOCKTNOSUPPORT"
+        Case WSAEOPNOTSUPP:      ErrorMsg = "WSAEOPNOTSUPP"
+        Case WSAEPFNOSUPPORT:    ErrorMsg = "WSAEPFNOSUPPORT"
+        Case WSAEAFNOSUPPORT:    ErrorMsg = "WSAEAFNOSUPPORT"
+        Case WSAEADDRINUSE:      ErrorMsg = "WSAEADDRINUSE"
+        Case WSAEADDRNOTAVAIL:   ErrorMsg = "WSAEADDRNOTAVAIL"
+        Case WSAENETDOWN:        ErrorMsg = "WSAENETDOWN"
+        Case WSAENETUNREACH:     ErrorMsg = "WSAENETUNREACH"
+        Case WSAENETRESET:       ErrorMsg = "WSAENETRESET"
+        Case WSAECONNABORTED:    ErrorMsg = "WSAECONNABORTED"
+        Case WSAECONNRESET:      ErrorMsg = "WSAECONNRESET"
+        Case WSAENOBUFS:         ErrorMsg = "WSAENOBUFS"
+        Case WSAEISCONN:         ErrorMsg = "WSAEISCONN"
+        Case WSAENOTCONN:        ErrorMsg = "WSAENOTCONN"
+        Case WSAESHUTDOWN:       ErrorMsg = "WSAESHUTDOWN"
+        Case WSAETIMEDOUT:       ErrorMsg = "WSAETIMEDOUT"
+        Case WSAECONNREFUSED:    ErrorMsg = "WSAECONNREFUSED"
+        Case WSAEHOSTDOWN:       ErrorMsg = "WSAEHOSTDOWN"
+        Case WSAEHOSTUNREACH:    ErrorMsg = "WSAEHOSTUNREACH"
+        Case WSAEPROCLIM:        ErrorMsg = "WSAEPROCLIM"
+        Case WSASYSNOTREADY:     ErrorMsg = "WSASYSNOTREADY"
+        Case WSAVERNOTSUPPORTED: ErrorMsg = "WSAVERNOTSUPPORTED"
+        Case WSANOTINITIALISED:  ErrorMsg = "WSANOTINITIALISED"
+        Case WSAEDISCON:         ErrorMsg = "WSAEDISCON"
+        Case WSATYPE_NOT_FOUND:  ErrorMsg = "WSATYPE_NOT_FOUND"
+        Case WSAHOST_NOT_FOUND:  ErrorMsg = "WSAHOST_NOT_FOUND"
+        Case WSATRY_AGAIN:       ErrorMsg = "WSATRY_AGAIN"
+        Case WSANO_RECOVERY:     ErrorMsg = "WSANO_RECOVERY"
+        Case WSANO_DATA:         ErrorMsg = "WSANO_DATA"
+        Case sckInvalidOp:       ErrorMsg = "sckInvalidOp"
+        Case Else:               ErrorMsg = "UNKNOWN"
     End Select
-    ErrorMsg = ErrorMsg & vbCrLf & "エラーコード : " & str$(ErrorCode)
+    ErrorMsg = ErrorMsg & vbCrLf & "#" & str$(ErrorCode)
 End Function
 
 '--------------------------------------------------
-' UTF8関連
+' UTF8
 '--------------------------------------------------
 
-'UTF8バイト配列をUnicode文字列に変換
+'Byte 2 String
 Private Function FromUTF8(ByRef bData() As Byte) As String
     Dim nBufferSize As Long
 
@@ -422,7 +422,7 @@ Private Function FromUTF8(ByRef bData() As Byte) As String
     MultiByteToWideChar CP_UTF8, 0, VarPtr(bData(LBound(bData))), UBound(bData) - LBound(bData) + 1, StrPtr(FromUTF8), nBufferSize
 End Function
 
-'Unicode文字列をUTF8バイト配列に変換
+'String 2 Byte
 Private Function ToUTF8(ByRef sData As String) As Byte()
     Dim nBufferSize As Long
     Dim ret() As Byte
@@ -442,157 +442,12 @@ End Function
 
 '--------------------------------------------------------------------------
 '--------------------------------------------------------------------------
-' サーバプロシージャ
+' httpsvr
 '--------------------------------------------------------------------------
 '--------------------------------------------------------------------------
-Public Sub wsTCPListen()
-    Dim Buf As RingBuf
-    Dim WSAD As WSAData
-    Dim sockfd As LongPtr 'socket
-    Dim HostAddr As sockaddr, ClientAddr As sockaddr
-    Dim HostAddr_in As sockaddr_in
-    Dim Addrptr As LongPtr
-    Dim ret As Long, flg As Long
-    Dim yes As Boolean, err As Boolean
-    Dim i As Integer, j As Integer
-    Dim wait As Single
-        
-    'winsock初期化
-    If (WSAStartup(WS_VERSION_REQD, WSAD)) Then
-        MsgBox ErrorMsg(WSAGetLastError)
-        WSACleanup
-        Exit Sub
-    End If
-
-    'ソケット取得
-    sockfd = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
-    If sockfd < 0 Then
-        MsgBox ErrorMsg(WSAGetLastError)
-        WSACleanup
-        Exit Sub
-    End If
-    
-    'setting socket option SO_REUSEADDR
-    yes = True
-    If w_setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, yes, Len(yes)) = SOCKET_ERROR Then
-        MsgBox ErrorMsg(WSAGetLastError)
-        WSACleanup
-        Exit Sub
-    End If
-    
-    '待受ソケット構造体
-    HostAddr_in.sin_family = AF_INET
-    HostAddr_in.sin_port = htons(PORT)
-    HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
-    Addrptr = VarPtr(HostAddr_in)
-    MoveMemory VarPtr(HostAddr), ByVal Addrptr, SOCKADDR_SIZE
-
-    If w_bind(sockfd, HostAddr, SOCKADDR_SIZE) = SOCKET_ERROR Then
-        MsgBox ErrorMsg(WSAGetLastError)
-        WSACleanup
-        Exit Sub
-    End If
-
-    If w_listen(sockfd, BACKLOG) = SOCKET_ERROR Then
-        MsgBox ErrorMsg(WSAGetLastError)
-        WSACleanup
-        Exit Sub
-    End If
-    
-    Debug.Print "wsTCPListen:" & Now()
-    Q = False
-    
-    Do
-        err = False
-        ClearBuf Buf
-
-        'クライアントソケット
-        Buf.Fd = w_accept(sockfd, ClientAddr, SOCKADDR_SIZE)
-        MoveMemory VarPtr(Buf.Addr), VarPtr(ClientAddr), SOCKADDR_SIZE
-        If Buf.Fd = -1 Then
-            Debug.Print ErrorMsg(WSAGetLastError)
-            Exit Do
-        End If
-        
-        'non-block
-        '空のコネクションをつかむとblock_ioでは戻ってこなくなる。
-        flg = 1
-        w_ioctlsocket Buf.Fd, FIONBIO, flg
-
-        DoEvents
-
-        wait = Timer
-        Do
-            ret = w_recv(Buf.Fd, Buf.Recvbyte(0), RecvSize, 0)
-            If Timer > wait + TOUT Then Exit Do
-            DoEvents
-        Loop While (ret = SOCKET_ERROR)
-
-        If ret = SOCKET_ERROR Then
-            Debug.Print "w_recv " & ErrorMsg(WSAGetLastError)
-            err = True
-        ElseIf ret = 0 Then
-            '切断
-            Debug.Print "w_recv 切断"
-            err = True
-        Else
-            '使用済みバイト保存
-            i = CInt(ret)
-
-            If (CrLf2(Buf.Recvbyte, Buf.HeadTerm)) And (ContentLength(Buf.Recvbyte, j, Buf.HeadTerm)) Then
-                err = False
-                Buf.RecvTerm = j + Buf.HeadTerm
-            Else
-                DoEvents
-                'loop
-                Do
-                    ret = w_recv(Buf.Fd, Buf.Recvbyte(i), RecvSize - i, 0)
-                    If ret > 0 Then
-                        i = i + ret
-                    Else
-                        Exit Do
-                    End If
-                Loop
-
-                If Buf.HeadTerm = 0 And (Not CrLf2(Buf.Recvbyte, Buf.HeadTerm)) Then
-                    err = True
-                ElseIf Not (ContentLength(Buf.Recvbyte, j, Buf.HeadTerm)) Then
-                    err = True
-                Else
-                    err = False
-                    Buf.RecvTerm = j + Buf.HeadTerm
-                End If
-            End If
-
-        End If
-        
-        If err = False Then
-            '加工処理(RecvByteからSendByteを生成)
-            Process Buf.HeadTerm, Buf.RecvTerm, Buf.Recvbyte, Buf.Sendbyte
-            '送信処理
-            SendRes Buf.Fd, Buf.Sendbyte
-        End If
-        
-        If (w_closesocket(Buf.Fd) = SOCKET_ERROR) Then
-            Debug.Print ErrorMsg(WSAGetLastError)
-        End If
-
-    Loop While (Not Q)
-       
-    If (w_closesocket(sockfd) = SOCKET_ERROR) Then
-        MsgBox ErrorMsg(WSAGetLastError)
-        WSACleanup
-        Exit Sub
-    End If
-    
-    If WSACleanup() = SOCKET_ERROR Then
-        MsgBox ErrorMsg(WSAGetLastError)
-    End If
-
-End Sub
 
 Public Sub wsTCPListenMpx()
-    Dim Buf(BufSize) As RingBuf
+    Dim buf(BufSize) As RingBuf
     Dim Fds As FD_SET
     Dim WSAD As WSAData
     Dim TV As timeval
@@ -607,14 +462,14 @@ Public Sub wsTCPListenMpx()
     
     Const NULLPTR As LongPtr = 0
         
-    'winsock初期化
+    'winsock init
     If (WSAStartup(WS_VERSION_REQD, WSAD)) Then
         MsgBox ErrorMsg(WSAGetLastError)
         WSACleanup
         Exit Sub
     End If
 
-    'ソケット取得
+    'get sock
     ss = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
     If ss < 0 Then
         MsgBox ErrorMsg(WSAGetLastError)
@@ -637,9 +492,9 @@ Public Sub wsTCPListenMpx()
         Exit Sub
     End If
 
-    '待受ソケット構造体
+    'struct acc
     HostAddr_in.sin_family = AF_INET
-    HostAddr_in.sin_port = htons(PORT)
+    HostAddr_in.sin_port = htons(Port)
     HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
     Addrptr = VarPtr(HostAddr_in)
     MoveMemory VarPtr(HostAddr), ByVal Addrptr, SOCKADDR_SIZE
@@ -660,34 +515,32 @@ Public Sub wsTCPListenMpx()
     Q = False
     TV.tv_sec = 0
     TV.tv_usec = 0
-    'Buf(0)を親ソケットにする。
-    Buf(0).Fd = ss
+    'Buf(0)=sock acc
+    buf(0).Fd = ss
     Debug.Print "opened:" & ss
-    '子ソケット初期化
+    'sock trans init
     For i = 1 To BufSize
-        ClearBuf Buf(i)
+        ClearBuf buf(i)
     Next i
     
     Do
         'clean up timeout fd
         wait = Timer
         For i = 1 To BufSize
-            If Buf(i).Fd <> -1 And wait > (Buf(i).Cntr + TOUT) Then
-                Debug.Print "clean up:" & Buf(i).Fd
-                If (w_closesocket(Buf(i).Fd) = SOCKET_ERROR) Then
+            If buf(i).Fd <> -1 And wait > (buf(i).Cntr + TOUT) Then
+                Debug.Print "clean up:" & buf(i).Fd
+                If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
                     Debug.Print ErrorMsg(WSAGetLastError)
                 End If
-                ClearBuf Buf(i)
+                ClearBuf buf(i)
             End If
         Next i
         'select
-        'マクロを使った実装になっているので、その部分をVBA側で
-        '置き換える必要がある。
-        'Fdsは都度上書きされるらしい
+        'Original one is macro and make new by VBA
         vbaFD_ZERO Fds
 
         For i = 0 To BufSize
-            If Buf(i).Fd <> -1 Then vbaFD_SET Buf(i).Fd, Fds
+            If buf(i).Fd <> -1 Then vbaFD_SET buf(i).Fd, Fds
         Next i
         
         cnt = Fds.fd_count
@@ -699,39 +552,39 @@ Public Sub wsTCPListenMpx()
                 'clean up disconnect fd
                 'recv activated fd
                 For i = 1 To BufSize
-                    If Buf(i).Fd <> -1 And vbaFD_ISSET(Buf(i).Fd, Fds) <> 0 Then
-                        ret = w_recv(Buf(i).Fd, Buf(i).Recvbyte(Buf(i).RecvTerm), RecvSize - Buf(i).RecvTerm, 0)
+                    If buf(i).Fd <> -1 And vbaFD_ISSET(buf(i).Fd, Fds) <> 0 Then
+                        ret = w_recv(buf(i).Fd, buf(i).Recvbyte(buf(i).RecvTerm), RecvSize - buf(i).RecvTerm, 0)
                         If ret = 0 Then
-                            Debug.Print "disconnected:" & Buf(i).Fd
-                            If (w_closesocket(Buf(i).Fd) = SOCKET_ERROR) Then
+                            Debug.Print "disconnected:" & buf(i).Fd
+                            If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
                                 Debug.Print ErrorMsg(WSAGetLastError)
                             End If
-                            ClearBuf Buf(i)
+                            ClearBuf buf(i)
                         ElseIf ret > 0 Then
-                            Buf(i).RecvTerm = Buf(i).RecvTerm + ret
-                            Debug.Print "received:" & Buf(i).Fd
+                            buf(i).RecvTerm = buf(i).RecvTerm + ret
+                            Debug.Print "received:" & buf(i).Fd
                         Else
-                            Debug.Print "receive_error:" & Buf(i).Fd
+                            Debug.Print "receive_error:" & buf(i).Fd
                         End If
                     End If
                 Next i
                 'check buffered fd
                 For i = 1 To BufSize
-                    If Buf(i).Fd <> -1 And (CrLf2(Buf(i).Recvbyte, Buf(i).HeadTerm)) And _
-                            (ContentLength(Buf(i).Recvbyte, j, Buf(i).HeadTerm)) Then
-                        Buf(i).RecvTerm = Buf(i).HeadTerm + j
-                        Buf(i).FlgIn = True
-                        Debug.Print "checked:" & Buf(i).Fd
+                    If buf(i).Fd <> -1 And (CrLf2(buf(i).Recvbyte, buf(i).HeadTerm)) And _
+                            (ContentLength(buf(i).Recvbyte, j, buf(i).HeadTerm)) Then
+                        buf(i).RecvTerm = buf(i).HeadTerm + j
+                        buf(i).FlgIn = True
+                        Debug.Print "checked:" & buf(i).Fd
                     End If
                 Next i
                 'clean up full-filled fd
                 For i = 1 To BufSize
-                    If Buf(i).Fd <> -1 And Buf(i).RecvTerm = RecvSize And Buf(i).FlgIn = False Then
-                        Debug.Print "full buffered:" & Buf(i).Fd
-                        If (w_closesocket(Buf(i).Fd) = SOCKET_ERROR) Then
+                    If buf(i).Fd <> -1 And buf(i).RecvTerm = RecvSize And buf(i).FlgIn = False Then
+                        Debug.Print "full buffered:" & buf(i).Fd
+                        If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
                             Debug.Print ErrorMsg(WSAGetLastError)
                         End If
-                        ClearBuf Buf(i)
+                        ClearBuf buf(i)
                     End If
                 Next i
             End If
@@ -741,7 +594,7 @@ Public Sub wsTCPListenMpx()
                 Do
                     NA = True
                     For i = j To BufSize
-                        If Buf(i).Fd = -1 Then
+                        If buf(i).Fd = -1 Then
                             NA = False
                             Exit For
                         End If
@@ -757,10 +610,10 @@ Public Sub wsTCPListenMpx()
                     If sc = -1 Then
                         Exit Do
                     Else
-                        Buf(i).Fd = sc
-                        Buf(i).Cntr = Timer
-                        MoveMemory VarPtr(Buf(i).Addr), VarPtr(ClientAddr), SOCKADDR_SIZE
-                        Debug.Print "accepted:" & Buf(i).Fd
+                        buf(i).Fd = sc
+                        buf(i).Cntr = Timer
+                        MoveMemory VarPtr(buf(i).Addr), VarPtr(ClientAddr), SOCKADDR_SIZE
+                        Debug.Print "accepted:" & buf(i).Fd
                     End If
                 Loop
             End If
@@ -768,23 +621,23 @@ Public Sub wsTCPListenMpx()
 
         'http io
         For i = 1 To BufSize
-            If Buf(i).FlgIn = True Then
-                Process Buf(i).HeadTerm, Buf(i).RecvTerm, Buf(i).Recvbyte, Buf(i).Sendbyte
-                Buf(i).FlgOut = True
+            If buf(i).FlgIn = True Then
+                Process buf(i).HeadTerm, buf(i).RecvTerm, buf(i).Recvbyte, buf(i).Sendbyte, buf(i).Addr
+                buf(i).FlgOut = True
             End If
         Next i
         
         'send
         For i = 1 To BufSize
-            If Buf(i).FlgOut = True Then
-                SendRes Buf(i).Fd, Buf(i).Sendbyte
+            If buf(i).FlgOut = True Then
+                SendRes buf(i).Fd, buf(i).Sendbyte
                 
-                If (w_closesocket(Buf(i).Fd) = SOCKET_ERROR) Then
+                If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
                     Debug.Print ErrorMsg(WSAGetLastError)
                 End If
                 
-                Debug.Print "sent:" & Buf(i).Fd
-                ClearBuf Buf(i)
+                Debug.Print "sent:" & buf(i).Fd
+                ClearBuf buf(i)
             End If
         Next i
         
@@ -808,28 +661,27 @@ Public Sub wsTCPListenMpx()
     End If
 
 End Sub
-Public Sub wsTCPListenOld()
+
+Public Sub wsTCPListen()
+    Dim buf As RingBuf
     Dim WSAD As WSAData
-    Dim sockfd As LongPtr, Fd As LongPtr 'socket
+    Dim sockfd As LongPtr 'socket
     Dim HostAddr As sockaddr, ClientAddr As sockaddr
-    Dim HostAddr_in As sockaddr_in, ClientAddr_in As sockaddr_in
+    Dim HostAddr_in As sockaddr_in
     Dim Addrptr As LongPtr
     Dim ret As Long, flg As Long
     Dim yes As Boolean, err As Boolean
     Dim i As Integer, j As Integer
     Dim wait As Single
-    Dim Recvbyte(RecvSize) As Byte, Sendbyte(SendSize) As Byte
-    Dim HeadTerm As Integer, Length As Integer
-
         
-    'winsock初期化
+    'winsock init
     If (WSAStartup(WS_VERSION_REQD, WSAD)) Then
         MsgBox ErrorMsg(WSAGetLastError)
         WSACleanup
         Exit Sub
     End If
 
-    'ソケット取得
+    'get sock
     sockfd = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
     If sockfd < 0 Then
         MsgBox ErrorMsg(WSAGetLastError)
@@ -845,9 +697,157 @@ Public Sub wsTCPListenOld()
         Exit Sub
     End If
     
-    '待受ソケット構造体
+    'struct acc
     HostAddr_in.sin_family = AF_INET
-    HostAddr_in.sin_port = htons(PORT)
+    HostAddr_in.sin_port = htons(Port)
+    HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
+    Addrptr = VarPtr(HostAddr_in)
+    MoveMemory VarPtr(HostAddr), ByVal Addrptr, SOCKADDR_SIZE
+
+    If w_bind(sockfd, HostAddr, SOCKADDR_SIZE) = SOCKET_ERROR Then
+        MsgBox ErrorMsg(WSAGetLastError)
+        WSACleanup
+        Exit Sub
+    End If
+
+    If w_listen(sockfd, BACKLOG) = SOCKET_ERROR Then
+        MsgBox ErrorMsg(WSAGetLastError)
+        WSACleanup
+        Exit Sub
+    End If
+    
+    Debug.Print "wsTCPListen:" & Now()
+    Q = False
+    
+    Do
+        err = False
+        ClearBuf buf
+
+        'sock trans
+        buf.Fd = w_accept(sockfd, ClientAddr, SOCKADDR_SIZE)
+        MoveMemory VarPtr(buf.Addr), VarPtr(ClientAddr), SOCKADDR_SIZE
+        If buf.Fd = -1 Then
+            Debug.Print ErrorMsg(WSAGetLastError)
+            Exit Do
+        End If
+        
+        'non-block
+        'block_io don't work if conn idle.
+        flg = 1
+        w_ioctlsocket buf.Fd, FIONBIO, flg
+
+        DoEvents
+
+        wait = Timer
+        Do
+            ret = w_recv(buf.Fd, buf.Recvbyte(0), RecvSize, 0)
+            If Timer > wait + TOUT Then Exit Do
+            DoEvents
+        Loop While (ret = SOCKET_ERROR)
+
+        If ret = SOCKET_ERROR Then
+            Debug.Print "w_recv " & ErrorMsg(WSAGetLastError)
+            err = True
+        ElseIf ret = 0 Then
+            'disconnect
+            Debug.Print "w_recv disconnect"
+            err = True
+        Else
+            'num used bytes
+            i = CInt(ret)
+
+            If (CrLf2(buf.Recvbyte, buf.HeadTerm)) And (ContentLength(buf.Recvbyte, j, buf.HeadTerm)) Then
+                err = False
+                buf.RecvTerm = j + buf.HeadTerm
+            Else
+                DoEvents
+                'loop
+                Do
+                    ret = w_recv(buf.Fd, buf.Recvbyte(i), RecvSize - i, 0)
+                    If ret > 0 Then
+                        i = i + ret
+                    Else
+                        Exit Do
+                    End If
+                Loop
+
+                If buf.HeadTerm = 0 And (Not CrLf2(buf.Recvbyte, buf.HeadTerm)) Then
+                    err = True
+                ElseIf Not (ContentLength(buf.Recvbyte, j, buf.HeadTerm)) Then
+                    err = True
+                Else
+                    err = False
+                    buf.RecvTerm = j + buf.HeadTerm
+                End If
+            End If
+
+        End If
+        
+        If err = False Then
+            'Process
+            Process buf.HeadTerm, buf.RecvTerm, buf.Recvbyte, buf.Sendbyte, buf.Addr
+            'Transmission
+            SendRes buf.Fd, buf.Sendbyte
+        End If
+        
+        If (w_closesocket(buf.Fd) = SOCKET_ERROR) Then
+            Debug.Print ErrorMsg(WSAGetLastError)
+        End If
+
+    Loop While (Not Q)
+       
+    If (w_closesocket(sockfd) = SOCKET_ERROR) Then
+        MsgBox ErrorMsg(WSAGetLastError)
+        WSACleanup
+        Exit Sub
+    End If
+    
+    If WSACleanup() = SOCKET_ERROR Then
+        MsgBox ErrorMsg(WSAGetLastError)
+    End If
+
+End Sub
+
+Public Sub wsTCPListenOld()
+    Dim WSAD As WSAData
+    Dim sockfd As LongPtr, Fd As LongPtr 'socket
+    Dim HostAddr As sockaddr, ClientAddr As sockaddr
+    Dim HostAddr_in As sockaddr_in, ClientAddr_in As sockaddr_in
+    Dim Addrptr As LongPtr
+    Dim ret As Long, flg As Long
+    Dim yes As Boolean, err As Boolean
+    Dim i As Integer, j As Integer
+    Dim wait As Single
+    Dim Recvbyte(RecvSize) As Byte, Sendbyte(SendSize) As Byte
+    Dim HeadTerm As Integer, Length As Integer
+
+        
+    'winsock init
+    If (WSAStartup(WS_VERSION_REQD, WSAD)) Then
+        MsgBox ErrorMsg(WSAGetLastError)
+        WSACleanup
+        Exit Sub
+    End If
+
+    'get sock
+    sockfd = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
+    If sockfd < 0 Then
+        MsgBox ErrorMsg(WSAGetLastError)
+        WSACleanup
+        Exit Sub
+    End If
+    
+    'setting socket option SO_REUSEADDR
+    yes = True
+    If w_setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, yes, Len(yes)) = SOCKET_ERROR Then
+        MsgBox ErrorMsg(WSAGetLastError)
+        WSACleanup
+        Exit Sub
+    End If
+    
+    'struct acc
+    HostAddr_in.sin_family = AF_INET
+    HostAddr_in.sin_port = htons(Port)
     HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
     Addrptr = VarPtr(HostAddr_in)
     MoveMemory VarPtr(HostAddr), ByVal Addrptr, SOCKADDR_SIZE
@@ -873,7 +873,7 @@ Public Sub wsTCPListenOld()
         HeadTerm = 0
         Length = 0
 
-        'クライアントソケット
+        'sock trans
         Fd = w_accept(sockfd, ClientAddr, SOCKADDR_SIZE)
         MoveMemory VarPtr(ClientAddr_in), VarPtr(ClientAddr), SOCKADDR_SIZE
         If Fd = -1 Then
@@ -892,7 +892,7 @@ Public Sub wsTCPListenOld()
             Select Case ret
                 Case Is > 0
                     i = i + ret
-                '切断
+                'disconnect
                 Case 0
                     Exit Do
                 Case SOCKET_ERROR
@@ -907,9 +907,9 @@ Public Sub wsTCPListenOld()
         End If
         
         If err = False Then
-            '加工処理(RecvByteからSendByteを生成)
-            Process HeadTerm, HeadTerm + Length, Recvbyte, Sendbyte
-            '送信処理
+            'Process
+            Process HeadTerm, HeadTerm + Length, Recvbyte, Sendbyte, ClientAddr_in
+            'Transmission
             SendRes Fd, Sendbyte
         End If
         
@@ -931,11 +931,11 @@ Public Sub wsTCPListenOld()
 
 End Sub
 
-'加工処理サンプル
-Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvbyte() As Byte, Sendbyte() As Byte)
+'Sample Process
+Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvbyte() As Byte, Sendbyte() As Byte, Clntaddr As sockaddr_in)
     Dim i As Integer, j As Integer, k As Integer
     Dim Arg(RecvSize) As Byte, Res() As Byte
-    Dim Recvstring As String, Sendstring As String, Argstring As String, Mthd As String, User As String
+    Dim Recvstring As String, SendString As String, Argstring As String, Mthd As String, Resource As String
     
     'On Error GoTo Error_
     
@@ -948,28 +948,25 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
     
     Select Case Mthd
         Case "HEAD"
-            Sendstring = "HTTP/1.0 200 OK" & vbCrLf & _
+            SendString = "HTTP/1.0 200 OK" & vbCrLf & _
             "Server: VBA webserver" & vbCrLf & _
             vbCrLf
             
         Case "GET ", "POST"
-            'GET /(user)...
-            'ユーザーが入っているときは登録画面を返す
-            'POST /(user)...
-            'ユーザーが入っているときは登録画面を返し登録処理をする
-            'GET or POST /... -> return csv
-            'ユーザーが入っていないときはcsvを返す
-            'GET or POST /(userではない文字列)...
-            'Not Found
-            'GET /q -> 終了
+            'GET (resource)...
+            'return registration form
+            'POST (resource)...
+            'regist & return registration form
+            'GET /l -> return lists
+            'GET /q -> quit
             Argstring = ""
             If Mthd = "POST" Then
-                'USER　"POST /"以降の7文字目からスペースまで
-                i = InStr(7, Recvstring, Chr(32))
-                If i > 7 Then
-                    User = Mid(Recvstring, 7, i - 7)
+                'resource　"POST(space)(resource)(space)HTTP..."
+                i = InStr(6, Recvstring, Chr(32))
+                If i > 6 Then
+                    Resource = Mid(Recvstring, 6, i - 6)
                 Else
-                    User = ""
+                    Resource = ""
                 End If
                 'メッセージボディからパーセントエンコーディング復元してstringに
                 j = 0
@@ -986,16 +983,16 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
                 Next i
                 Argstring = FromUTF8(Arg)
             ElseIf Mthd = "GET " Then
-                 'USER　"GET /"以降の6文字目からスペースまで
-                i = InStr(6, Recvstring, Chr(32))
-                If i > 6 Then
-                    User = Mid(Recvstring, 6, i - 6)
+                 'resource　"GET(space)(resource)(space)HTTP..."
+                i = InStr(5, Recvstring, Chr(32))
+                If i > 5 Then
+                    Resource = Mid(Recvstring, 5, i - 5)
                 Else
-                    User = ""
+                    Resource = ""
                 End If
             End If
             
-            If User = "" Then
+            If Resource = "/l" Then
 '                Sendstring = "HTTP/1.0 200 OK" & vbCrLf & _
 '                "Server: VBA webserver" & vbCrLf & _
 '                "Content-Type: application/octet-stream" & vbCrLf & _
@@ -1003,26 +1000,25 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
 '                "Content-Transfer-Encoding: binary" & _
 '                vbCrLf & vbCrLf & _
 '                Csv
-                Sendstring = "HTTP/1.0 200 OK" & vbCrLf & _
+                SendString = "HTTP/1.0 200 OK" & vbCrLf & _
                 "Server: VBA webserver" & vbCrLf & _
-                "Content-Type: text/plain; charset=Shift_JIS" & vbCrLf & _
-                vbCrLf & _
+                "Content-Type: text/plain; charset=utf-8" & vbCrLf & vbCrLf & _
                 Csv
-            ElseIf User = "q" Then
+            ElseIf Resource = "/q" Then
                 Q = True
-                Sendstring = "HTTP/1.0 200 OK" & vbCrLf & _
+                SendString = "HTTP/1.0 200 OK" & vbCrLf & _
                 "Server: VBA webserver" & vbCrLf & _
-                "Content-Type: text/plain; charset=Shift_JIS" & vbCrLf & _
+                "Content-Type: text/plain; charset=utf-8" & vbCrLf & _
                 vbCrLf & _
                 "QUIT"
-            ElseIf User Like "*[!a-z]*" Then
-                Sendstring = "HTTP/1.0 404 Not Found" & vbCrLf & _
+            ElseIf Resource Like "/[!a-z]*" Then
+                SendString = "HTTP/1.0 404 Not Found" & vbCrLf & _
                 "Server: VBA webserver" & vbCrLf & _
                 vbCrLf
             Else
-                Sendstring = "HTTP/1.0 200 OK" & vbCrLf & _
+                SendString = "HTTP/1.0 200 OK" & vbCrLf & _
                 "Server: VBA webserver" & vbCrLf & _
-                vbCrLf & _
+                "Content-Type: text/html; charset=utf-8" & vbCrLf & vbCrLf & _
                 "<!DOCTYPE html>" & _
                 "<html>" & _
                 "<head>" & _
@@ -1047,17 +1043,17 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
                 "</html>"
                 
                 If Argstring <> "" Then
-                    Paste User, Argstring
+                    Paste IPToText(Clntaddr.sin_addr), Resource, Argstring
                 End If
             End If
             
         Case Else
-            Sendstring = "HTTP/1.0 404 Not Found" & vbCrLf & _
+            SendString = "HTTP/1.0 404 Not Found" & vbCrLf & _
             "Server: VBA webserver" & vbCrLf & _
             vbCrLf
     End Select
     
-    Res = StrConv(Sendstring, vbFromUnicode)
+    Res = ToUTF8(SendString)
     Erase Sendbyte
     
     If UBound(Res) < SendSize Then
@@ -1067,7 +1063,6 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
     End If
     
     MoveMemory VarPtr(Sendbyte(0)), VarPtr(Res(0)), k
-    'Debug.Print Recvstring & vbCrLf & Sendstring
     
 Exit Sub
 
@@ -1097,7 +1092,7 @@ Private Sub SendRes(Fd As LongPtr, Sendbyte() As Byte)
             Debug.Print "w_send " & ErrorMsg(WSAGetLastError)
             Exit Do
         ElseIf ret = 0 Then
-            Debug.Print "w_send 切断"
+            Debug.Print "w_send disconnect"
             Exit Do
         End If
     Loop Until (j = 0)
@@ -1169,29 +1164,29 @@ Private Function ContentLength(Recv() As Byte, Length As Integer, ByVal BodyStar
 
 End Function
 
-Private Sub ClearBuf(Buf As RingBuf)
+Private Sub ClearBuf(buf As RingBuf)
 
-    Buf.Fd = -1
-    Buf.FlgIn = False
-    Buf.FlgOut = False
-    Buf.HeadTerm = 0
-    Buf.RecvTerm = 0
-    Buf.Cntr = 0
-    Erase Buf.Recvbyte
-    Erase Buf.Sendbyte
-    ZeroMemory Buf.Addr, SOCKADDR_IN_SIZE
+    buf.Fd = -1
+    buf.FlgIn = False
+    buf.FlgOut = False
+    buf.HeadTerm = 0
+    buf.RecvTerm = 0
+    buf.Cntr = 0
+    Erase buf.Recvbyte
+    Erase buf.Sendbyte
+    ZeroMemory buf.Addr, SOCKADDR_IN_SIZE
 
 End Sub
 
-
-Private Sub Paste(User As String, Arg As String)
+Private Sub Paste(IP As String, Res As String, Arg As String)
     Dim LastRow As Integer
     
-    'エスケープ処理
+    'escape
     LastRow = ActiveSheet.UsedRange.Rows(ActiveSheet.UsedRange.Rows.Count).Row
     ActiveSheet.Cells(LastRow + 1, 1).Value = Now()
-    ActiveSheet.Cells(LastRow + 1, 2).Value = Replace(Replace(User, Chr(34), ""), Chr(44), "")
-    ActiveSheet.Cells(LastRow + 1, 3).Value = Replace(Replace(Replace(Replace(Arg, vbCr, ""), vbLf, ""), Chr(34), ""), Chr(44), "")
+    ActiveSheet.Cells(LastRow + 1, 2).Value = IP
+    ActiveSheet.Cells(LastRow + 1, 3).Value = Replace(Replace(Res, Chr(34), ""), Chr(44), "")
+    ActiveSheet.Cells(LastRow + 1, 4).Value = Replace(Replace(Replace(Replace(Arg, vbCr, ""), vbLf, ""), Chr(34), ""), Chr(44), "")
     
 End Sub
 Private Function Csv() As String
@@ -1207,7 +1202,7 @@ Private Function Csv() As String
     Else
         For i = UBound(Data) To 1 Step -1
              str = str & Format(Data(i, 1), "yyyy/mm/dd hh:mm:ss") & COMMA & _
-             Data(i, 2) & COMMA & Data(i, 3) & vbCrLf
+             Data(i, 2) & COMMA & Data(i, 3) & COMMA & Data(i, 4) & vbCrLf
         Next i
         
         Csv = str
@@ -1232,8 +1227,7 @@ Private Sub vbaFD_SET(ByVal Fd As LongPtr, ByRef Fds As FD_SET)
 '    }
 '} while(0, 0)
 
-'オリジナルは追加するだけやけど、nfdsが取りやすいように
-'降順で追加する。
+'DESC
 'nfds = Fds(0) + 1
 
     Dim i, j As Integer
