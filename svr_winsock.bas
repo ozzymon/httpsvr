@@ -968,7 +968,7 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
                 Else
                     Resource = ""
                 End If
-                'メッセージボディからパーセントエンコーディング復元してstringに
+                'percent-decode
                 j = 0
                 Erase Arg
                 
