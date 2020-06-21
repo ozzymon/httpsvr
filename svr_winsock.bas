@@ -961,7 +961,7 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
             'GET /q -> quit
             Argstring = ""
             If Mthd = "POST" Then
-                'resource@"POST(space)(resource)(space)HTTP..."
+                'resource "POST(space)(resource)(space)HTTP..."
                 i = InStr(6, Recvstring, Chr(32))
                 If i > 6 Then
                     Resource = Mid(Recvstring, 6, i - 6)
@@ -983,7 +983,7 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
                 Next i
                 Argstring = FromUTF8(Arg)
             ElseIf Mthd = "GET " Then
-                 'resource@"GET(space)(resource)(space)HTTP..."
+                 'resource "GET(space)(resource)(space)HTTP..."
                 i = InStr(5, Recvstring, Chr(32))
                 If i > 5 Then
                     Resource = Mid(Recvstring, 5, i - 5)
