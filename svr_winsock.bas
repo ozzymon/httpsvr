@@ -396,7 +396,7 @@ Private Function ErrorMsg(ByVal ErrorCode) As String
         Case sckInvalidOp:       ErrorMsg = "sckInvalidOp"
         Case Else:               ErrorMsg = "UNKNOWN"
     End Select
-    ErrorMsg = ErrorMsg & vbCrLf & "#" & str$(ErrorCode)
+    ErrorMsg = str$(ErrorCode) & " " & ErrorMsg
 End Function
 
 '--------------------------------------------------
@@ -746,7 +746,7 @@ Public Sub wsTCPListen()
         Loop While (ret = SOCKET_ERROR)
 
         If ret = SOCKET_ERROR Then
-            Debug.Print "w_recv " & ErrorMsg(WSAGetLastError)
+            Debug.Print "w_recv" & ErrorMsg(WSAGetLastError)
             err = True
         ElseIf ret = 0 Then
             'disconnect
