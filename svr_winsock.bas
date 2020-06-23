@@ -82,9 +82,9 @@ End Type
 
 Public Type hostent
      h_name As LongPtr          'pointer to hostname string
-     h_aliases As LongPtr       '
-     h_addrtype As Long      'address type
-     h_length As Long        'length of each address
+     h_aliases As LongPtr
+     h_addrtype As Long         'address type
+     h_length As Long           'length of each address
      h_addr_list As LongPtr     'list of addresses (null end)
 End Type
 
@@ -469,7 +469,7 @@ Public Sub wsTCPListenMpx()
         Exit Sub
     End If
 
-    'get sock
+    'get the socket 4 accept
     ss = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
     If ss < 0 Then
         MsgBox ErrorMsg(WSAGetLastError)
@@ -492,7 +492,7 @@ Public Sub wsTCPListenMpx()
         Exit Sub
     End If
 
-    'struct acc
+    'struct 4 accept
     HostAddr_in.sin_family = AF_INET
     HostAddr_in.sin_port = htons(Port)
     HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
@@ -515,16 +515,16 @@ Public Sub wsTCPListenMpx()
     Q = False
     TV.tv_sec = 0
     TV.tv_usec = 0
-    'Buf(0)=sock acc
+    'buf(0) -> sock 4 accept
     buf(0).Fd = ss
     Debug.Print "opened:" & ss
-    'sock trans init
+    'socket 4 transmission init
     For i = 1 To BufSize
         ClearBuf buf(i)
     Next i
     
     Do
-        'clean up timeout fd
+        'clean up timeout fd(s)
         wait = Timer
         For i = 1 To BufSize
             If buf(i).Fd <> -1 And wait > (buf(i).Cntr + TOUT) Then
@@ -536,7 +536,7 @@ Public Sub wsTCPListenMpx()
             End If
         Next i
         'select
-        'Original one is macro and make new by VBA
+        'Original one is macro and make new in VBA
         vbaFD_ZERO Fds
 
         For i = 0 To BufSize
@@ -549,8 +549,8 @@ Public Sub wsTCPListenMpx()
         
         If w_select(0, VarPtr(Fds), NULLPTR, NULLPTR, TV) <> 0 Then
             If cnt > 1 Then
-                'clean up disconnect fd
-                'recv activated fd
+                'clean up disconnect fd(s)
+                'recieve activated fd(s)
                 For i = 1 To BufSize
                     If buf(i).Fd <> -1 And vbaFD_ISSET(buf(i).Fd, Fds) <> 0 Then
                         ret = w_recv(buf(i).Fd, buf(i).Recvbyte(buf(i).RecvTerm), RecvSize - buf(i).RecvTerm, 0)
@@ -568,7 +568,7 @@ Public Sub wsTCPListenMpx()
                         End If
                     End If
                 Next i
-                'check buffered fd
+                'check buffered fd(s)
                 For i = 1 To BufSize
                     If buf(i).Fd <> -1 And (CrLf2(buf(i).Recvbyte, buf(i).HeadTerm)) And _
                             (ContentLength(buf(i).Recvbyte, j, buf(i).HeadTerm)) Then
@@ -577,7 +577,7 @@ Public Sub wsTCPListenMpx()
                         Debug.Print "checked:" & buf(i).Fd
                     End If
                 Next i
-                'clean up full-filled fd
+                'clean up full-filled fd(s)
                 For i = 1 To BufSize
                     If buf(i).Fd <> -1 And buf(i).RecvTerm = RecvSize And buf(i).FlgIn = False Then
                         Debug.Print "full buffered:" & buf(i).Fd
@@ -681,7 +681,7 @@ Public Sub wsTCPListen()
         Exit Sub
     End If
 
-    'get sock
+    'get the socket 4 accept
     sockfd = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
     If sockfd < 0 Then
         MsgBox ErrorMsg(WSAGetLastError)
@@ -697,7 +697,7 @@ Public Sub wsTCPListen()
         Exit Sub
     End If
     
-    'struct acc
+    'struct 4 accept
     HostAddr_in.sin_family = AF_INET
     HostAddr_in.sin_port = htons(Port)
     HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
@@ -723,7 +723,7 @@ Public Sub wsTCPListen()
         err = False
         ClearBuf buf
 
-        'sock trans
+        'socket 4 transmission
         buf.Fd = w_accept(sockfd, ClientAddr, SOCKADDR_SIZE)
         MoveMemory VarPtr(buf.Addr), VarPtr(ClientAddr), SOCKADDR_SIZE
         If buf.Fd = -1 Then
@@ -732,7 +732,7 @@ Public Sub wsTCPListen()
         End If
         
         'non-block
-        'block_io don't work if conn idle.
+        'block_io don't work if the connection is idle.
         flg = 1
         w_ioctlsocket buf.Fd, FIONBIO, flg
 
@@ -753,7 +753,7 @@ Public Sub wsTCPListen()
             Debug.Print "w_recv disconnect"
             err = True
         Else
-            'num used bytes
+            'number of used bytes
             i = CInt(ret)
 
             If (CrLf2(buf.Recvbyte, buf.HeadTerm)) And (ContentLength(buf.Recvbyte, j, buf.HeadTerm)) Then
@@ -829,7 +829,7 @@ Public Sub wsTCPListenOld()
         Exit Sub
     End If
 
-    'get sock
+    'get the socket 4 accept
     sockfd = w_socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
     If sockfd < 0 Then
         MsgBox ErrorMsg(WSAGetLastError)
@@ -845,7 +845,7 @@ Public Sub wsTCPListenOld()
         Exit Sub
     End If
     
-    'struct acc
+    'struct 4 accept
     HostAddr_in.sin_family = AF_INET
     HostAddr_in.sin_port = htons(Port)
     HostAddr_in.sin_addr = inet_addr("0.0.0.0") 'INADDR_ANY
@@ -873,7 +873,7 @@ Public Sub wsTCPListenOld()
         HeadTerm = 0
         Length = 0
 
-        'sock trans
+        'socket 4 transmission
         Fd = w_accept(sockfd, ClientAddr, SOCKADDR_SIZE)
         MoveMemory VarPtr(ClientAddr_in), VarPtr(ClientAddr), SOCKADDR_SIZE
         If Fd = -1 Then
@@ -931,7 +931,7 @@ Public Sub wsTCPListenOld()
 
 End Sub
 
-'Sample Process
+'Sample of Process
 Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvbyte() As Byte, Sendbyte() As Byte, Clntaddr As sockaddr_in)
     Dim i As Integer, j As Integer, k As Integer
     Dim Arg(RecvSize) As Byte, Res() As Byte
