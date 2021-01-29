@@ -176,15 +176,20 @@ Private Const BufSize = FD_SETSIZE - 1
 
 Private Type RingBuf
     Fd As LongPtr
-    FlgIn As Boolean
-    FlgOut As Boolean
+    '0:New 1:In 2:Out 3:NA
+    Flg(3) As Byte
     HeadTerm As Integer
     RecvTerm As Integer
     Cntr As Single
     Addr As sockaddr_in
     Recvbyte(RecvSize) As Byte
     Sendbyte(SendSize) As Byte
+    W2send As Long
+    Sent As Long
 End Type
+
+Private Const FIN = 0
+Private Const FOU = 1
 
 '--------------------------------------------------------------------
 '- Windows API
@@ -455,12 +460,13 @@ Public Sub wsTCPListenMpx()
     Dim HostAddr As sockaddr, ClientAddr As sockaddr
     Dim HostAddr_in As sockaddr_in
     Dim Addrptr As LongPtr
-    Dim flg As Long, ret As Long
+    Dim Flg As Long, ret As Long
     Dim yes As Boolean, NA As Boolean
     Dim i As Integer, j As Integer, cnt As Integer
     Dim wait As Single
     
     Const NULLPTR As LongPtr = 0
+    Const LONGZERO As Long = 0
         
     'winsock init
     If (WSAStartup(WS_VERSION_REQD, WSAD)) Then
@@ -486,8 +492,8 @@ Public Sub wsTCPListenMpx()
     End If
     
     'non-block
-    flg = 1
-    If w_ioctlsocket(ss, FIONBIO, flg) = SOCKET_ERROR Then
+    Flg = 1
+    If w_ioctlsocket(ss, FIONBIO, Flg) = SOCKET_ERROR Then
         WSACleanup
         Exit Sub
     End If
@@ -515,13 +521,13 @@ Public Sub wsTCPListenMpx()
     Q = False
     TV.tv_sec = 0
     TV.tv_usec = 0
+        'socket 4 transmission init
+    For i = 0 To BufSize
+        ClearBuf buf(i)
+    Next i
     'buf(0) -> sock 4 accept
     buf(0).Fd = ss
     Debug.Print "opened:" & ss
-    'socket 4 transmission init
-    For i = 1 To BufSize
-        ClearBuf buf(i)
-    Next i
     
     Do
         'clean up timeout fd(s)
@@ -540,54 +546,51 @@ Public Sub wsTCPListenMpx()
         vbaFD_ZERO Fds
 
         For i = 0 To BufSize
-            If buf(i).Fd <> -1 Then vbaFD_SET buf(i).Fd, Fds
+            If buf(i).Fd <> -1 And buf(i).Flg(FOU) <> 1 Then vbaFD_SET buf(i).Fd, Fds
         Next i
         
         cnt = Fds.fd_count
         
         If Q Then Exit Do
         
-        If w_select(0, VarPtr(Fds), NULLPTR, NULLPTR, TV) <> 0 Then
+        If w_select(LONGZERO, VarPtr(Fds), NULLPTR, NULLPTR, TV) <> 0 Then
             If cnt > 1 Then
                 'clean up disconnect fd(s)
                 'recieve activated fd(s)
                 For i = 1 To BufSize
-                    If buf(i).Fd <> -1 And vbaFD_ISSET(buf(i).Fd, Fds) <> 0 Then
-                        ret = w_recv(buf(i).Fd, buf(i).Recvbyte(buf(i).RecvTerm), RecvSize - buf(i).RecvTerm, 0)
-                        If ret = 0 Then
-                            Debug.Print "disconnected:" & buf(i).Fd
+                    If buf(i).Fd <> -1 And buf(i).Flg(FOU) <> 1 And vbaFD_ISSET(buf(i).Fd, Fds) <> 0 Then
+                        ret = w_recv(buf(i).Fd, buf(i).Recvbyte(buf(i).RecvTerm), RecvSize - buf(i).RecvTerm, LONGZERO)
+                        If ret > 0 Then
+                            buf(i).RecvTerm = buf(i).RecvTerm + ret
+                            Debug.Print "received:" & buf(i).Fd
+                            'check buffered fd(s)
+                            If (CrLf2(buf(i).Recvbyte, buf(i).HeadTerm)) And _
+                                (ContentLength(buf(i).Recvbyte, j, buf(i).HeadTerm)) Then
+                                buf(i).RecvTerm = buf(i).HeadTerm + j
+                                buf(i).Flg(FIN) = 1
+                                Debug.Print "checked:" & buf(i).Fd
+                            'clean up full-filled fd(s)
+                            ElseIf buf(i).RecvTerm = RecvSize And buf(i).Flg(FIN) = 0 Then
+                                Debug.Print "full buffered:" & buf(i).Fd
+                                If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
+                                    Debug.Print ErrorMsg(WSAGetLastError)
+                                End If
+                                ClearBuf buf(i)
+                            End If
+                        Else
+                            If ret = 0 Then
+                                Debug.Print "disconnected:" & buf(i).Fd
+                            Else
+                                Debug.Print "receive_error:" & buf(i).Fd
+                            End If
                             If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
                                 Debug.Print ErrorMsg(WSAGetLastError)
                             End If
                             ClearBuf buf(i)
-                        ElseIf ret > 0 Then
-                            buf(i).RecvTerm = buf(i).RecvTerm + ret
-                            Debug.Print "received:" & buf(i).Fd
-                        Else
-                            Debug.Print "receive_error:" & buf(i).Fd
                         End If
                     End If
                 Next i
-                'check buffered fd(s)
-                For i = 1 To BufSize
-                    If buf(i).Fd <> -1 And (CrLf2(buf(i).Recvbyte, buf(i).HeadTerm)) And _
-                            (ContentLength(buf(i).Recvbyte, j, buf(i).HeadTerm)) Then
-                        buf(i).RecvTerm = buf(i).HeadTerm + j
-                        buf(i).FlgIn = True
-                        Debug.Print "checked:" & buf(i).Fd
-                    End If
-                Next i
-                'clean up full-filled fd(s)
-                For i = 1 To BufSize
-                    If buf(i).Fd <> -1 And buf(i).RecvTerm = RecvSize And buf(i).FlgIn = False Then
-                        Debug.Print "full buffered:" & buf(i).Fd
-                        If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
-                            Debug.Print ErrorMsg(WSAGetLastError)
-                        End If
-                        ClearBuf buf(i)
-                    End If
-                Next i
-            End If
+             End If
             'accept
             If vbaFD_ISSET(ss, Fds) <> 0 Then
                 j = 1
@@ -621,26 +624,35 @@ Public Sub wsTCPListenMpx()
 
         'http io
         For i = 1 To BufSize
-            If buf(i).FlgIn = True Then
-                Process buf(i).HeadTerm, buf(i).RecvTerm, buf(i).Recvbyte, buf(i).Sendbyte, buf(i).Addr
-                buf(i).FlgOut = True
+            If buf(i).Flg(FIN) = 1 Then
+                buf(i).W2send = Process(buf(i).HeadTerm, buf(i).RecvTerm, buf(i).Recvbyte, buf(i).Sendbyte, buf(i).Addr)
+                buf(i).Flg(FOU) = 1
+                buf(i).Flg(FIN) = 0
             End If
         Next i
         
         'send
-        For i = 1 To BufSize
-            If buf(i).FlgOut = True Then
-                SendRes buf(i).Fd, buf(i).Sendbyte
-                
-                If (w_closesocket(buf(i).Fd) = SOCKET_ERROR) Then
-                    Debug.Print ErrorMsg(WSAGetLastError)
-                End If
-                
-                Debug.Print "sent:" & buf(i).Fd
-                ClearBuf buf(i)
-            End If
+        vbaFD_ZERO Fds
+
+        For i = 0 To BufSize
+            If buf(i).Fd <> -1 And buf(i).Flg(FOU) = 1 Then vbaFD_SET buf(i).Fd, Fds
         Next i
-        
+
+        If w_select(LONGZERO, NULLPTR, VarPtr(Fds), NULLPTR, TV) <> 0 Then
+            For i = 1 To BufSize
+                If buf(i).Fd <> -1 And buf(i).Flg(FOU) = 1 And vbaFD_ISSET(buf(i).Fd, Fds) <> 0 Then
+                    buf(i).Sent = w_send(buf(i).Fd, buf(i).Sendbyte(buf(i).Sent), buf(i).W2send - buf(i).Sent, LONGZERO)
+                    If buf(i).Sent = buf(i).W2send Then
+                        If w_closesocket(buf(i).Fd) = SOCKET_ERROR Then
+                            Debug.Print ErrorMsg(WSAGetLastError)
+                        Else
+                            Debug.Print "sent:" & buf(i).Fd
+                            ClearBuf buf(i)
+                        End If
+                    End If
+                End If
+            Next i
+        End If
     Loop
     
     i = 0
@@ -669,7 +681,7 @@ Public Sub wsTCPListen()
     Dim HostAddr As sockaddr, ClientAddr As sockaddr
     Dim HostAddr_in As sockaddr_in
     Dim Addrptr As LongPtr
-    Dim ret As Long, flg As Long
+    Dim ret As Long, Flg As Long
     Dim yes As Boolean, err As Boolean
     Dim i As Integer, j As Integer
     Dim wait As Single
@@ -733,8 +745,8 @@ Public Sub wsTCPListen()
         
         'non-block
         'block_io don't work if the connection is idle.
-        flg = 1
-        w_ioctlsocket buf.Fd, FIONBIO, flg
+        Flg = 1
+        w_ioctlsocket buf.Fd, FIONBIO, Flg
 
         DoEvents
 
@@ -814,7 +826,7 @@ Public Sub wsTCPListenOld()
     Dim HostAddr As sockaddr, ClientAddr As sockaddr
     Dim HostAddr_in As sockaddr_in, ClientAddr_in As sockaddr_in
     Dim Addrptr As LongPtr
-    Dim ret As Long, flg As Long
+    Dim ret As Long, Flg As Long
     Dim yes As Boolean, err As Boolean
     Dim i As Integer, j As Integer
     Dim wait As Single
@@ -882,8 +894,8 @@ Public Sub wsTCPListenOld()
         End If
         
         'non-block
-        flg = 1
-        w_ioctlsocket Fd, FIONBIO, flg
+        Flg = 1
+        w_ioctlsocket Fd, FIONBIO, Flg
 
         i = 0
         j = 1
@@ -932,7 +944,7 @@ Public Sub wsTCPListenOld()
 End Sub
 
 'Sample of Process
-Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvbyte() As Byte, Sendbyte() As Byte, Clntaddr As sockaddr_in)
+Private Function Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvbyte() As Byte, Sendbyte() As Byte, Clntaddr As sockaddr_in) As Long
     Dim i As Integer, j As Integer, k As Integer
     Dim Arg(RecvSize) As Byte, Res() As Byte
     Dim Recvstring As String, SendString As String, Argstring As String, Mthd As String, Resource As String
@@ -1063,17 +1075,21 @@ Private Sub Process(ByVal HeadTerm As Integer, ByVal RecvTerm As Integer, Recvby
     End If
     
     MoveMemory VarPtr(Sendbyte(0)), VarPtr(Res(0)), k
+    Process = CLng(k)
     
-Exit Sub
+Exit Function
 
 Error_:
     Erase Sendbyte
+    Process = 0
 
-End Sub
+End Function
 
-Private Sub SendRes(Fd As LongPtr, Sendbyte() As Byte)
+Private Sub SendRes(ByVal Fd As LongPtr, Sendbyte() As Byte)
     Dim i  As Integer, j As Integer
     Dim ret As Long
+    
+    Const LONGZERO As Long = 0
 
     For j = SendSize To 0 Step -1
         If Sendbyte(j) <> 0 Then Exit For
@@ -1083,7 +1099,7 @@ Private Sub SendRes(Fd As LongPtr, Sendbyte() As Byte)
     j = j + 1
 
     Do
-        ret = w_send(Fd, Sendbyte(i), CLng(j), 0)
+        ret = w_send(Fd, Sendbyte(i), CLng(j), LONGZERO)
         If ret > 0 Then
             j = j - ret
             i = i + ret
@@ -1165,16 +1181,18 @@ Private Function ContentLength(Recv() As Byte, Length As Integer, ByVal BodyStar
 End Function
 
 Private Sub ClearBuf(buf As RingBuf)
+    Const FlgArrSize As Long = 32
 
     buf.Fd = -1
-    buf.FlgIn = False
-    buf.FlgOut = False
     buf.HeadTerm = 0
     buf.RecvTerm = 0
     buf.Cntr = 0
+    buf.Sent = 0
+    buf.W2send = 0
     Erase buf.Recvbyte
     Erase buf.Sendbyte
     ZeroMemory buf.Addr, SOCKADDR_IN_SIZE
+    ZeroMemory buf.Flg(0), FlgArrSize
 
 End Sub
 
