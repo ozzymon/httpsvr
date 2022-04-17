@@ -1,4 +1,4 @@
-﻿##  argumentum ad honminum/baculum 2
+﻿##  argumentum ad hominum/baculum 2
 
 論理的アプローチって自然や世界に対するのに効果的な態度であって、
 やはり人間へのインターフェイスは罵倒や暴力と共にあるようだ。
@@ -26,7 +26,7 @@
 不当執行で生じた負債の穴埋めにもならんけどね。。。
 
 
-## argumentum ad honminum/baculum
+## argumentum ad hominum/baculum
 
 弁論術の骨子は人格攻撃と場外乱闘らしい、ホントなのか。
 
