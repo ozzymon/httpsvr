@@ -1,3 +1,3 @@
 # About gangstalking in Japan
 
-Punish THEM.
+Some contents for punishing THEM.
