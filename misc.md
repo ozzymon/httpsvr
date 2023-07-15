@@ -1,6 +1,6 @@
 ﻿## CAUTION
 
-Welcome Japan, the medicineman nation. In Fukuoka here, there is some swimming competition now. At the cafe, the bar and so you met some torouble, suddenly you might be drunken without alchol. That might be the aerosol with some psychotropic tranquillizer. I'm Japanese and I know us Japanese very well, we Japanuse are totally backstabbing. If you met troubles like that, you'd better put open letters to the ... They are the drug dealer and distribute it with the equipments.
+Welcome Japan, the medicineman nation. There is some swimming competition now. At the cafe, the bar and so you met some torouble, suddenly you might be drunken without alchol. That might be the aerosol with some psychotropic tranquillizer. I'm Japanese and I know us Japanese very well, we Japanuse are totally backstabbing. If you met troubles like that, you'd better put open letters to the local government. They are the drug dealer and distribute it with the equipments.
 
 
 ## 最後の足掻きやろか
@@ -10,9 +10,9 @@ Welcome Japan, the medicineman nation. In Fukuoka here, there is some swimming c
 
 ## GW明けから
 
-やたらとハードに薬漬けにされるなと思ったら世界水泳が市内で開催されるのね。この前から書いてる内容でもう居住県やら割れてると思うけど。修羅の国がどうこうとかって結局は自治体の責任、そうしといた方が都合がいいから環境保全してやがるだけ。でも、反動か景気のいいフレーズやらやたらと多用しやがって。卑怯者の分際がええ格好だけしたがるとカモの側がますます押し込められてしわ寄せが来るからヤメロ、シャバイ性根が完治せんのは仕方ないにしても病識くらいは持って遠慮せえよなあ、って言いたい。
+やたらとハードに薬漬けにされるなと思ったら大きなイベントが市内で開催されてるのね。地域に関する蔑称とかって結局は自治体の責任、そうしといた方が都合がいいから環境保全してやがるだけ。でも反動か知らんが景気のいいフレーズだけはやたらと多用しやがるのね。卑怯者の分際がええ格好だけしやがってからその期間普段からカモにしてるマトを押し込めて表に出さんようにしやがるのね、シャバイ性根が完治せんのは仕方ないにしても病識くらい持って遠慮せえよなあ、って言いたい。ちなみにロシアの冬季オリンピックで同様の措置がなされたことがニュースになってましたな、まあ、うちの国も同レベルってことで。
 
-ああ、あと非同意投薬、これ外国人向けにも使われる、使われてると筆者は見るね。揉めたときにワンショットって訳。差し詰め筆者みたいなカモを試射のマトなんやろね、今みたくイベントがある時期、本番に向けてのね。
+ああ、あと非同意投薬、これ訪日者向けにも使われる、使われてると筆者は見るね、まさにこういうイベント、タイミングでね。店舗やなんかで揉めたときにワンショットって訳。差し詰め筆者みたいなカモを試射のマトにしとるんやろね、今みたくイベントがある時期、本番に向けて。あと、この間からすこーし触れてきた音響装置、これも同様の用途、母国語で警告するため。
 
 ここ二か月の動き、玄人っぽい動員と人頭の減少、薬剤の質的変化、交通事故の発生を前提とした仕掛け、仕掛け範囲の限定、こんな感じね。通院やめて一年って区切りと出身県の陳述、居住県の審査終了、そのあたりマイルストーンもあって。ここに既成事実戦略などの切り口を絡め現況の考察を仕上げる予定、月末かな。
 
