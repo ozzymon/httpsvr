@@ -1,6 +1,6 @@
 ﻿## CAUTION
 
-Welcome Japan, the medicineman nation. There is some swimming competition now. At the cafe, the bar and so you met some torouble, suddenly you might be drunken without alchol. That might be the aerosol with some psychotropic tranquillizer. I'm Japanese and I know us Japanese very well, we Japanuse are totally backstabbing. If you met troubles like that, you'd better put open letters to the local government. They are the drug dealer and distribute it with the equipments.
+Welcome Japan, the medicineman nation. There is some swimming competition now. At the cafe, the bar and so you met some torouble, suddenly you might be drunken without alchol. That might be the aerosol with some psychotropic tranquillizer. I'm Japanese and I know us Japanese very well, we Japanuse are totally backstabbing. If you met troubles like that, you'd better put open letters to the local government. They are the drug dealer and distribute it with equipments and strategies.
 
 
 ## 最後の足掻きやろか
