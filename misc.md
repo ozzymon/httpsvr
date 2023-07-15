@@ -4,12 +4,12 @@
 
 逆にその状況であるから非同意投薬で本人から通院するよう仕向ける、ややもすると暴力沙汰など起こすよう挑発する、確保の際には錯乱するよう非同意投薬する、という訳で。まあ、全体的にこの国の精神医療ってこんな感じでしかないと筆者は見てる。そもそもの発祥である欧米では境界を超えてくるような性向のあるヒト向け対策の位置づけと思うのよね。対応のため体系を作ったんじゃないかと。それを境界調整が文化として貧弱なこの国に持ち込んだ時点で怪しい運用の素地が芽生えてるのよね。この国では困ったヒトの定義が「境界を超えてくる」じゃなくて「境界を主張する」「茶坊主が職務上行う境界超えを咎めだてしてくる」だったりするから。皆の感覚が共有されてる、ごくごく限られた個人的領域以外には境界なんて無い、が前提なのね。で、本来の精神医療の体系だとカバーできる困ったヒトが皆無に等しい、てか小役人連中、つまり運用してる側の本人さん、の方が逆に該当しちゃう。で、無茶な運用しちゃってる訳よ。従事してる人間が総じてノ〇マなのもまともな頭があるヒトだとやってられないからと思うのね。んで、頭のない昼行燈でも使える「既成事実」「安全地帯」「被害者ヅラ」などの仕組みが作りこまれてる。一度出来上がった既成事実にはなーんにも決定権がなくアリと一緒でシステムと環境との相克によって意思が生成する、蟻の羽虫どもは事前的な既成事実の作りこみに関してのみ一定の操作性を有する、と。
 
-この羽虫の類と同じってのは多分いいトコついてると思う。蟻やら羽虫なら環境淘汰によってのみ都度の意思が成立する訳で間引きがないと惰性で動くのみ。中身は羽虫でも一応ヒトの扱いやから間引くとかあり得んからなあ、逆にそういうことをやっちゃう精神性こそ羽虫の所以やろ、蟻野郎の羽虫どものコトね。
+この羽虫の類と同じってのは多分いいトコついてると思う。羽虫なら間引きがないと惰性でひたすらの現状維持って行動パターンやろ。そういう連中については筆者詳しいのよ。
 
 
 ## CAUTION
 
-Welcome Japan, the medicineman nation. There is some swimming competition now. At the cafe, the bar and so ... you met some torouble, suddenly you might be drunken without alchol. That might be the aerosol with some psychotropic tranquillizer. I'm Japanese and I know us Japanese very well, we Japanuse are totally backstabbing. If you met troubles like that, you'd better put open letters to the local government. They distribute it with equipments and strategies.
+Welcome Japan, the medicineman nation. There is some swimming competition now. At the cafe, the bar and so ... you'll be in some torouble, suddenly you might be drunken without alchol. That might be the aerosol with some psychotropic tranquillizer. I'm Japanese and I know us Japanese very well, we Japanuse are totally backstabbing. If you met troubles like that, you'd better put open letters to the local government. They distribute it with equipments and strategies.
 
 
 ## 最後の足掻きやろか
